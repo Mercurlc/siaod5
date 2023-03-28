@@ -51,6 +51,7 @@ void inputL1(Node* L1, Node* L2)
 
 void coutList(Node* L1)
 {
+    std::cout << "Список:" << std::endl;
     while (L1 != nullptr)
     {
         std::cout << L1->cData << std::endl;
@@ -67,40 +68,82 @@ Node* GetPreviousNode(Node* pArrStart, Node* pTargetNode)
 }
 
 
-void deleteFromL2(Node* L2)
+void deleteFromL2(Node*& L2)
 {
-    for (auto pCurrent = L2; pCurrent; pCurrent = pCurrent->next)
+    for (auto pCurrent = L2; pCurrent;)
     {
         if (!isdigit(pCurrent->cData))
+        {
+            pCurrent = pCurrent->next;
             continue;
-        
-        auto pPrevNode = GetPreviousNode(L2, pCurrent);
+        }
 
+        auto pPrevNode = GetPreviousNode(L2, pCurrent);
+       
+        if (!pPrevNode)
+        {
+            auto pTmp = pCurrent;
+            pCurrent = pCurrent->next;
+            L2 = pCurrent;
+            delete pTmp;
+            continue;
+        }
 		pPrevNode->next = pCurrent->next;
         delete pCurrent;
 
         pCurrent = pPrevNode;
+        pCurrent = pCurrent->next;
     }
 
    
 }
 int main()
 {
+    setlocale(LC_ALL, "ru");
     Node* L1 = NULL;
-    push(L1, 'a');
-    push(L1, 'b');
-    coutList(L1);
-
     Node* L2 = NULL;
-    push(L2, 'a');
-    push(L2, 'b');
-    push(L2, '2');
-    push(L2, '3');
-    coutList(L1);
+    int elements;
+    char ch;
+    int n;
 
-    std::cout << isEqual(L1, L2) << std::endl;
-    inputL1(L1, L2);
-    coutList(L1);
-    deleteFromL2(L2);
-    coutList(L2);
+
+    std::cout << "Сколько элемент вы хотите добавить в список 1?" << std::endl;
+    std:: cin >> elements;
+    for (int i = 0; i < elements; i++)
+    {
+        std::cin >> ch;
+        push(L1, ch);
+    }
+
+    std::cout << "Сколько элемент вы хотите добавить в список 2?" << std::endl;
+    std::cin >> elements;
+    for (int i = 0; i < elements; i++)
+    {
+        std::cin >> ch;
+        push(L2, ch);
+    }
+    //Разработать функцию, которая проверяет на равенство списки L1 и L2.
+//Разработать функцию, которая вставляет в список L1 последний элемент списка L2.
+//Разработать функцию, которая удаляет из списка L2, узлы, содержащие цифровые значения.
+    while (true)
+    {
+        std::cout << "Выберите действие над списками: 1, 2, 3" << std::endl;
+        std::cin >> n;
+        if (n == 1)
+        {
+            std::cout << isEqual(L1, L2) << std::endl;
+        }
+        if (n == 2)
+        {
+            inputL1(L1, L2);
+            coutList(L1);
+        }
+        if (n == 3)
+        {
+            deleteFromL2(L2);
+            coutList(L2);
+        }
+        if (n == 0)
+            break;
+    }
 }
